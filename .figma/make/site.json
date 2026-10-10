@@ -1,0 +1,17 @@
+{
+  "title": "Nikhil Arjun · Design Engineer (Figma to Production)",
+  "description": "Portfolio of Nikhil Arjun — Design Engineer bridging Figma precision, three-tier token architecture, tactile WebAudio physics, and production React engineering. Bangalore & Remote worldwide.",
+  "icons": {
+    "icon": "/favicon.svg"
+  },
+  "openGraph": {
+    "image": "/og.png"
+  },
+  "robots": {
+    "index": true
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

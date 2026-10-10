@@ -1,0 +1,317 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+:root {
+  --accent: #b8f36b;
+  --accent-rgb: 184, 243, 107;
+  --accent-soft: rgba(184, 243, 107, 0.15);
+  --accent-glow: rgba(184, 243, 107, 0.45);
+}
+
+@theme {
+  /* ---- Color: semantic tokens (legacy aliases kept for existing components) ---- */
+  --color-bg: #09090b;
+  --color-surface: #111114;
+  --color-surface-raised: #18181c;
+  --color-border: #232329;
+  --color-border-strong: #34343d;
+  --color-text-primary: #f4f4f5;
+  --color-text-secondary: #a1a1aa; /* 7.9:1 on bg */
+  --color-text-tertiary: #8b8b96; /* 5.6:1 on bg, metadata only */
+  --color-accent: var(--accent);
+  --color-on-accent: #09090b;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+  --color-keyboard-warning: #ffb900;
+
+  --color-panel: var(--color-surface);
+  --color-panel-elevated: var(--color-surface-raised);
+  --color-line: var(--color-border);
+  --color-line-bright: var(--color-border-strong);
+  --color-fg: var(--color-text-primary);
+  --color-muted: var(--color-text-tertiary);
+
+  /* ---- Type ---- */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --text-display: clamp(2.75rem, 1.6rem + 5vw, 5rem);
+  --text-display--line-height: 1;
+  --text-h1: clamp(2.25rem, 1.6rem + 2.8vw, 3.75rem);
+  --text-h1--line-height: 1.05;
+  --text-h2: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+  --text-h2--line-height: 1.15;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.35;
+  --text-body-lg: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  --text-body-lg--line-height: 1.6;
+  --text-body: 1rem;
+  --text-body--line-height: 1.65;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+  --text-eyebrow: 0.75rem;
+  --text-eyebrow--line-height: 1.4;
+
+  /* ---- Radius / shadow ---- */
+  --radius-control: 0.75rem;
+  --radius-card: 1rem;
+  --radius-panel: 1.5rem;
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 12px 32px -16px rgb(0 0 0 / 0.7);
+  --shadow-card-hover: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 24px 48px -20px rgb(0 0 0 / 0.85);
+  --shadow-accent: 0 8px 24px -8px var(--accent-glow);
+
+  /* ---- Motion ---- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+:root {
+  /* spacing rhythm is Tailwind's 4px scale; sections use these */
+  --space-section: clamp(6rem, 4rem + 8vw, 10rem);
+  --z-bg: 0;
+  --z-content: 10;
+  --z-nav: 40;
+  --z-overlay: 50;
+  --z-toast: 60;
+  --dur-micro: 180ms;
+  --dur-enter: 550ms;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: #09090b;
+  color-scheme: dark;
+}
+
+body {
+  background-color: #09090b;
+  color: #f4f4f5;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Visible, consistent focus for every interactive element */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.section-pad {
+  padding-block: var(--space-section);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Split-flap name: each glyph swap drops a flap from the top hinge */
+.flap-cell {
+  perspective: 600px;
+}
+.flap-anim {
+  transform-origin: 50% 0;
+  animation: flap-drop 100ms cubic-bezier(0.2, 0, 0, 1);
+  /* split line across the middle of the tile while flipping */
+  background: linear-gradient(transparent 49%, rgb(0 0 0 / 0.55) 49%, rgb(0 0 0 / 0.55) 51%, transparent 51%);
+}
+@keyframes flap-drop {
+  from { transform: rotateX(-75deg); opacity: 0.4; }
+  to { transform: rotateX(0deg); opacity: 1; }
+}
+
+::selection {
+  background: var(--accent);
+  color: #09090b;
+}
+
+/* Custom terminal caret */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.caret {
+  animation: blink 1s steps(1) infinite;
+}
+
+/* Custom animated ambient breathing underglow */
+@keyframes keyboard-underglow {
+  0%, 100% {
+    filter: drop-shadow(0 25px 45px var(--accent-soft)) drop-shadow(0 0 15px var(--accent-glow));
+  }
+  50% {
+    filter: drop-shadow(0 35px 65px var(--accent-glow)) drop-shadow(0 0 25px var(--accent-glow));
+  }
+}
+
+.keyboard-glow {
+  animation: keyboard-underglow 4s ease-in-out infinite;
+}
+
+/* Mechanical 3D Keycap depth */
+.keycap-3d {
+  position: relative;
+  transition: transform 0.08s cubic-bezier(0.2, 0, 0, 1),
+              box-shadow 0.08s cubic-bezier(0.2, 0, 0, 1),
+              border-color 0.12s ease,
+              background-color 0.12s ease;
+  box-shadow: 
+    0 4px 0 #0d0d10,
+    0 5px 0 #070709,
+    0 8px 16px -2px rgba(0, 0, 0, 0.7),
+    inset 0 1px 1px rgba(255, 255, 255, 0.12);
+}
+
+.keycap-3d:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 5px 0 #0d0d10,
+    0 6px 0 #070709,
+    0 10px 20px -2px rgba(0, 0, 0, 0.8),
+    inset 0 1px 1px rgba(255, 255, 255, 0.18);
+}
+
+.keycap-3d:active,
+.keycap-3d.key-pressed {
+  transform: translateY(4px) !important;
+  box-shadow: 
+    0 0 0 #0d0d10,
+    0 1px 0 #070709,
+    0 2px 6px rgba(0, 0, 0, 0.8),
+    inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Big Enter Keycap glow */
+.keycap-enter {
+  box-shadow: 
+    0 4px 0 rgba(0, 0, 0, 0.8),
+    0 6px 20px var(--accent-soft),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.keycap-enter:hover {
+  box-shadow: 
+    0 5px 0 rgba(0, 0, 0, 0.9),
+    0 8px 25px var(--accent-glow),
+    inset 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+.keycap-enter:active,
+.keycap-enter.key-pressed {
+  transform: translateY(4px) !important;
+  box-shadow: 
+    0 0 0 rgba(0, 0, 0, 0.9),
+    0 2px 10px var(--accent-glow),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Custom scrollbar for modals & panels */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #111114;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272e;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ---- Sketchbook bubble ---- */
+.sketch-bubble:focus-visible .sketch-bubble__face {
+  border-radius: 9999px;
+  box-shadow: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--accent);
+}
+.sketch-bubble__film {
+  background:
+    radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0) 55%, rgb(255 255 255 / 0.06) 68%, rgb(255 255 255 / 0.22) 100%),
+    conic-gradient(from 210deg, rgba(var(--accent-rgb), 0.35), rgb(120 200 255 / 0.3), rgb(255 140 220 / 0.28), rgb(255 230 140 / 0.25), rgba(var(--accent-rgb), 0.35));
+  -webkit-mask: radial-gradient(circle, transparent 58%, #000 72%);
+  mask: radial-gradient(circle, transparent 58%, #000 72%);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.25);
+  transition: opacity 0.3s;
+  opacity: 0.85;
+}
+.sketch-bubble__face {
+  background: radial-gradient(circle at 35% 30%, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.02) 60%, transparent 75%);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18), inset -6px -8px 18px rgb(255 255 255 / 0.06);
+}
+.sketch-bubble:hover .sketch-bubble__film {
+  opacity: 1;
+}
+.sketch-card {
+  transform: rotate(var(--tilt, 0deg));
+}
+.sketch-card:hover,
+.sketch-card:focus-visible {
+  transform: translateY(-6px) rotate(0deg) scale(1.02);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sketch-card,
+  .sketch-card:hover,
+  .sketch-card:focus-visible {
+    transition: none;
+    transform: rotate(var(--tilt, 0deg));
+  }
+}
+.sb-card-wrap:hover,
+.sb-card-wrap:focus-within {
+  z-index: 30 !important;
+}
+
+/* ---- Sketchbook bubble burst / re-form ---- */
+.sb-pop .sketch-bubble__face {
+  animation: sb-pop 420ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+.sb-pop .sb-shadow {
+  opacity: 0;
+  transition: opacity 200ms;
+}
+.sb-ring {
+  border: 1.5px solid rgb(255 255 255 / 0.5);
+  animation: sb-ring 420ms ease-out forwards;
+}
+.sb-drop {
+  background: radial-gradient(circle at 35% 35%, #fff, rgba(var(--accent-rgb), 0.6));
+  animation: sb-drop 520ms cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+.sb-form .sketch-bubble__face {
+  animation: sb-form 520ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+@keyframes sb-pop {
+  0% { transform: scale(1); opacity: 1; }
+  30% { transform: scale(1.12, 1.08); opacity: 1; }
+  55% { transform: scale(1.22); opacity: 0.6; filter: blur(0.5px); }
+  100% { transform: scale(1.4); opacity: 0; filter: blur(3px); }
+}
+@keyframes sb-ring {
+  0% { transform: scale(1); opacity: 0; }
+  30% { opacity: 0.8; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+@keyframes sb-drop {
+  0% { transform: translate(-50%, -50%) rotate(var(--a)) translateX(30px) scale(1); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) rotate(var(--a)) translateX(var(--d)) scale(0.2); opacity: 0; }
+}
+@keyframes sb-form {
+  from { transform: scale(0.3); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sb-pop .sketch-bubble__face { animation: sb-fade 160ms linear forwards; }
+  .sb-form .sketch-bubble__face { animation: sb-fade 200ms linear reverse both; }
+  .sb-ring, .sb-drop { display: none; }
+  @keyframes sb-fade { to { opacity: 0; } }
+}
