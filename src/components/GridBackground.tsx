@@ -137,7 +137,11 @@ export default function GridBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none fixed inset-0 z-0 opacity-80"
+      className="pointer-events-none fixed inset-0 z-0 opacity-55 lg:opacity-65"
+      style={{
+        maskImage: "linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.35) 34%, #000 68%)",
+        WebkitMaskImage: "linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.35) 34%, #000 68%)",
+      }}
       aria-hidden="true"
     />
   )

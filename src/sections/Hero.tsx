@@ -40,8 +40,11 @@ export default function Hero({
   const [cmd, setCmd] = useState("")
   const cmdRef = useRef("")
   const [out, setOut] = useState<string[]>([
-    "Welcome to Nikhil Arjun’s Design Engineering workstation.",
-    "Type a command or press any navigation key to explore.",
+    "> whoami",
+    "Nikhil Arjun — Design Engineer",
+    "I design interfaces and build them for production.",
+    "> explore",
+    "[ projects ]  [ design-system ]  [ contact ]",
   ])
   const [isTypingDemo, setIsTypingDemo] = useState(false)
   const click = useKeySound()
@@ -221,9 +224,9 @@ export default function Hero({
           {/* Proof: concrete numbers a recruiter can scan in 5s */}
           <dl className="grid max-w-lg grid-cols-3 gap-6 border-t border-border pt-6">
             {[
-              ["6", "shipped products"],
-              ["52+", "coded variants"],
-              ["1.2k", "designers use my tool"],
+              ["6", "products designed & built"],
+              ["52+", "variants across 4 apps"],
+              ["1.2k", "designers using UI Checklist"],
             ].map(([n, l]) => (
               <div key={l}>
                 <dt className="sr-only">{l}</dt>
