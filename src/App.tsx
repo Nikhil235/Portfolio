@@ -5,6 +5,7 @@ import Nav from "./components/Nav"
 import CommandPalette from "./components/CommandPalette"
 import SectionModal from "./components/SectionModal"
 import GridBackground from "./components/GridBackground"
+import CursorRingField from "./components/originkit/ui/cursor-ring-field"
 import SketchbookBubble from "./components/sketchbook/SketchbookBubble"
 import Hero from "./sections/Hero"
 import About from "./sections/About"
@@ -134,6 +135,18 @@ export default function App() {
 
         {/* Ambient Interactive Grid Background */}
         <GridBackground />
+
+        {/* Originkit cursor ring field */}
+        <CursorRingField
+          colors={["#b8f36b", "#38bdf8", "#09090b"]}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 1,
+            pointerEvents: "none",
+            opacity: 0.38,
+          }}
+        />
 
         {/* Global Navigation */}
         <Nav
