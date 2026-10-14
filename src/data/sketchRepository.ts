@@ -33,6 +33,7 @@ const seed: Sketch[] = [
   { id: "s-stencil", src: `${base}media/sketches/sketch-02.jpg`, title: "Beckham / Mark III", category: "Stencil", caption: "Two ways to fake depth: pure black shapes on the left, cross-hatching on the right.", alt: "Black stencil portrait of Beckham beside an ink Iron Man drawing", order: 5, width: 1600, height: 720 },
   { id: "s-rally", src: `${base}media/sketches/sketch-01.jpg`, title: "Rally", category: "Mixed media", caption: "Nadal mid-roar in watercolour, stacked over a dense Goku panel and a two-tone stencil.", alt: "Watercolour tennis player above an ink Dragon Ball panel and a stencil face", order: 6, width: 720, height: 1600 },
 ]
+const seedById = new Map(seed.map((sketch) => [sketch.id, sketch]))
 
 type Listener = (sketches: Sketch[]) => void
 const listeners = new Set<Listener>()
@@ -40,7 +41,14 @@ const listeners = new Set<Listener>()
 function read(): Sketch[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw) as Sketch[]
+    if (raw) {
+      const stored = JSON.parse(raw) as Sketch[]
+      return stored.map((sketch) => {
+        // Keep bundled sketches on the current base URL after deployments or path changes.
+        const currentSeed = seedById.get(sketch.id)
+        return currentSeed ? { ...sketch, src: currentSeed.src } : sketch
+      })
+    }
   } catch {
     /* fall through to seed */
   }

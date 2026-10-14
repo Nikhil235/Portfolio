@@ -17,6 +17,9 @@
 *.ai                 filter=lfs diff=lfs merge=lfs -text
 *.sketch             filter=lfs diff=lfs merge=lfs -text
 
+# Vercel needs the public sketch gallery as real files, not Git LFS pointers.
+/public/media/sketches/*.jpg -filter -diff -merge
+
 # ---------------------------------------------------------------------------
 # Video
 # ---------------------------------------------------------------------------
